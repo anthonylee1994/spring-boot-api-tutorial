@@ -6,7 +6,7 @@ import java.util.List;
  * @author anthonylee
  */
 public interface JobService {
-    List<Job> findAll();
+    List<Job> getAllJobs();
 
     Job createJob(Job job);
 

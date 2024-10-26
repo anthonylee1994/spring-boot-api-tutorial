@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /**
@@ -16,8 +17,8 @@ public class JobController {
     private final JobService jobService;
 
     @GetMapping()
-    public List<Job> findAll() {
-        return jobService.findAll();
+    public ResponseEntity<List<Job>> getAllJobs() {
+        return ResponseEntity.ok(jobService.getAllJobs());
     }
 
     @GetMapping("/{id}")
@@ -31,8 +32,12 @@ public class JobController {
 
     @PostMapping()
     public ResponseEntity<Job> createJob(@RequestBody Job job) {
-        Job createdJob = jobService.createJob(job);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
+        try {
+            Job createdJob = jobService.createJob(job);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{id}")

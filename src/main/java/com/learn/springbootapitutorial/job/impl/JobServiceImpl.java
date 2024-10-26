@@ -1,39 +1,34 @@
 package com.learn.springbootapitutorial.job.impl;
 
 import com.learn.springbootapitutorial.job.Job;
+import com.learn.springbootapitutorial.job.JobRepository;
 import com.learn.springbootapitutorial.job.JobService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author anthonylee
  */
 @Service
+@RequiredArgsConstructor
 public class JobServiceImpl implements JobService {
-
-    private final List<Job> jobs = new ArrayList<>();
-    private  Long nextId = 1L;
+    private final JobRepository jobRepository;
 
     @Override
-    public List<Job> findAll() {
-        return jobs;
+    public List<Job> getAllJobs() {
+        return jobRepository.findAll();
     }
 
     @Override
     public Job createJob(Job job) {
-        job.setId(nextId++);
-        jobs.add(job);
-        return job;
+        return jobRepository.save(job);
     }
 
     @Override
     public Job getJobById(Long id) {
-        return jobs.stream()
-                .filter(job -> job.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return jobRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -47,12 +42,17 @@ public class JobServiceImpl implements JobService {
         existingJob.setMinSalary(job.getMinSalary());
         existingJob.setMaxSalary(job.getMaxSalary());
         existingJob.setLocation(job.getLocation());
-
-        return existingJob;
+        existingJob.setCompany(job.getCompany());
+        return jobRepository.save(existingJob);
     }
 
     @Override
     public boolean deleteJob(Long id) {
-        return jobs.removeIf(job -> job.getId().equals(id));
+        Job existingJob = getJobById(id);
+        if (existingJob == null) {
+            return false;
+        }
+        jobRepository.delete(existingJob);
+        return true;
     }
 }
