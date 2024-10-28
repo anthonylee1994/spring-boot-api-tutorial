@@ -22,7 +22,7 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> getCompanyById(@PathVariable Long id) {
+    public ResponseEntity<Company> getCompanyById(@PathVariable("id") Long id) {
         Company company = companyService.getCompanyById(id);
         if (company == null) {
             return ResponseEntity.notFound().build();
@@ -37,7 +37,7 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Company> updateCompany(@PathVariable Long id, @RequestBody Company company) {
+    public ResponseEntity<Company> updateCompany(@PathVariable("id") Long id, @RequestBody Company company) {
         Company updatedCompany = companyService.updateCompany(id, company);
         if (updatedCompany == null) {
             return ResponseEntity.notFound().build();
@@ -46,7 +46,7 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCompany(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCompany(@PathVariable("id") Long id) {
         boolean isDeleted = companyService.deleteCompany(id);
         if (!isDeleted) {
             return ResponseEntity.notFound().build();
