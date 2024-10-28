@@ -1,3 +1,8 @@
+FROM gradle:8.10.2-jdk21 AS build
+WORKDIR /app
+COPY . .
+RUN gradle build -x test
+
 FROM eclipse-temurin:21
 VOLUME /tmp
 EXPOSE 8083
