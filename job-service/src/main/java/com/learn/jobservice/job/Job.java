@@ -23,5 +23,6 @@ public class Job {
     private String minSalary;
     private String maxSalary;
     private String location;
+    @Column(name = "company_id", nullable = false)
     private Long companyId;
 }

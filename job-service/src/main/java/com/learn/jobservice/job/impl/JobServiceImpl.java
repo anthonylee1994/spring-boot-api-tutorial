@@ -6,6 +6,7 @@ import com.learn.jobservice.job.JobService;
 import com.learn.jobservice.job.clients.CompanyClient;
 import com.learn.jobservice.job.clients.ReviewClient;
 import com.learn.jobservice.job.dto.JobDTO;
+import com.learn.jobservice.job.exception.ResourceNotFoundException;
 import com.learn.jobservice.job.external.Company;
 import com.learn.jobservice.job.external.Review;
 import com.learn.jobservice.job.mapper.JobMapper;
@@ -32,6 +33,12 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Job createJob(Job job) {
+        Company company = companyClient.getCompanyById(job.getCompanyId());
+
+        if (company == null) {
+            throw new ResourceNotFoundException("Company not found");
+        }
+
         return jobRepository.save(job);
     }
 
