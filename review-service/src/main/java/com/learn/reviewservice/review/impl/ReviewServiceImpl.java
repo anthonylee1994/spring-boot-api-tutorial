@@ -3,6 +3,9 @@ package com.learn.reviewservice.review.impl;
 import com.learn.reviewservice.review.Review;
 import com.learn.reviewservice.review.ReviewRepository;
 import com.learn.reviewservice.review.ReviewService;
+import com.learn.reviewservice.review.clients.CompanyClient;
+import com.learn.reviewservice.review.exception.ResourceNotFoundException;
+import com.learn.reviewservice.review.external.Company;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +14,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
+    private final CompanyClient companyClient;
     private final ReviewRepository reviewRepository;
 
     @Override
@@ -20,6 +24,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review addReview(Long companyId, Review review) {
+        Company company = companyClient.getCompanyById(companyId);
+
+        if (company == null) throw new ResourceNotFoundException("Company not found");
+
         review.setCompanyId(companyId);
         return reviewRepository.save(review);
     }
@@ -37,7 +45,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.setTitle(updatedReview.getTitle());
         review.setDescription(updatedReview.getDescription());
         review.setRating(updatedReview.getRating());
-        review.setCompanyId(updatedReview.getCompanyId());
+
         return reviewRepository.save(review);
     }
 
